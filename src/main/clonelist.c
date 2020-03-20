@@ -13,7 +13,7 @@ typedef struct {
 
 CloneList *clonelist_create(unsigned int elmntSize)
 {
-    CloneList *list = calloc(1, sizeof(CloneList));
+    CloneList *list = malloc(sizeof(CloneList));
     if (list == NULL) {
         return NULL;
     }
