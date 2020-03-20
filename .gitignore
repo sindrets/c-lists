@@ -1,0 +1,8 @@
+
+# misc
+.vscode
+.directory
+
+# build files
+out
+
