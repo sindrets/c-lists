@@ -1,9 +1,8 @@
 SRC_DIR = src
 SRC_MAIN = $(wildcard $(SRC_DIR)/main/**/*.c $(SRC_DIR)/main/*.c)
 SRC_TEST = $(wildcard $(SRC_DIR)/test/**/*.c $(SRC_DIR)/test/*.c)
-OBJ = $(patsubst src/main/%.c,$(OUT_DIR)/obj/%.o,$(SRC_MAIN))
 OUT_DIR = build
-OUT = $(patsubst $(SRC_DIR)/%.c,$(OUT_DIR)/%,$(SRC_MAIN) $(SRC_TEST))
+OBJ = $(patsubst $(SRC_DIR)/main/%.c,$(OUT_DIR)/obj/%.o,$(SRC_MAIN))
 
 LIB_NAME = liblists
 CC=gcc
@@ -12,7 +11,6 @@ CFLAGS= -Wall -std=c99 -g
 # $(info SRC_MAIN: ${SRC_MAIN})
 # $(info SRC_TEST: ${SRC_TEST})
 # $(info OBJ: ${OBJ})
-# $(info OUT: ${OUT})
 
 .PHONY:	all\
 		pre-build\
