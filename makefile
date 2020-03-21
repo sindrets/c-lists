@@ -1,16 +1,17 @@
-MAINS = src/test/main.c
 SRC_DIR = src
-SRC_MAIN = $(filter-out $(MAINS),$(wildcard $(SRC_DIR)/main/**/*.c $(SRC_DIR)/main/*.c))
-SRC_TEST = $(filter-out $(MAINS),$(wildcard $(SRC_DIR)/test/**/*.c $(SRC_DIR)/test/*.c))
-
-OUT_DIR = out
+SRC_MAIN = $(wildcard $(SRC_DIR)/main/**/*.c $(SRC_DIR)/main/*.c)
+SRC_TEST = $(wildcard $(SRC_DIR)/test/**/*.c $(SRC_DIR)/test/*.c)
+OBJ = $(patsubst src/main/%.c,$(OUT_DIR)/obj/%.o,$(SRC_MAIN))
+OUT_DIR = build
 OUT = $(patsubst $(SRC_DIR)/%.c,$(OUT_DIR)/%,$(SRC_MAIN) $(SRC_TEST))
 
+LIB_NAME = liblists
 CC=gcc
-CFLAGS=-I$(SRC_DIR) -Wall -std=c99 -g
+CFLAGS= -Wall -std=c99 -g
 
 # $(info SRC_MAIN: ${SRC_MAIN})
 # $(info SRC_TEST: ${SRC_TEST})
+# $(info OBJ: ${OBJ})
 # $(info OUT: ${OUT})
 
 .PHONY:	all\
@@ -21,30 +22,31 @@ CFLAGS=-I$(SRC_DIR) -Wall -std=c99 -g
 		valgrind\
 		clean\
 
-all: build build-test
+all: build build-test test
 
-%: %.c
-	$(CC) $(CFLAGS) -o $(patsubst $(SRC_DIR)/%,$(OUT_DIR)/%,$@) $<
+$(OUT_DIR)/bin/test: ${SRC_TEST}
+	$(CC) $(CFLAGS) -o $(OUT_DIR)/bin/test ${SRC_TEST} -L$(OUT_DIR)/lib -l$(patsubst lib%,%,$(LIB_NAME))
 
-out/test: ${SRC_TEST} ${SRC_MAIN} src/test/main.c
-	$(CC) $(CFLAGS) -o out/test ${SRC_TEST} ${SRC_MAIN} src/test/main.c
+$(OUT_DIR)/lib/$(LIB_NAME).so: $(SRC_MAIN)
+	$(CC) -c $(CFLAGS) -fpic $(SRC_MAIN)
+	mv *.o $(OUT_DIR)/obj
+	$(CC) $(CFLAGS) -shared -o $(OUT_DIR)/lib/$(LIB_NAME).so $(OBJ)
 
 pre-build:
-	mkdir -p out
+	mkdir -p $(OUT_DIR)/bin $(OUT_DIR)/lib $(OUT_DIR)/obj
 	@echo PRE-BUILD done
 
-build: pre-build
-	# TODO: build library
+build: pre-build $(OUT_DIR)/lib/$(LIB_NAME).so
 	@echo BUILD done
 
-build-test: pre-build out/test
+build-test: pre-build build $(OUT_DIR)/bin/test
 	@echo BUILD-TEST done
 
-test: out/test
-	out/test
+test: pre-build build build-test
+	LD_LIBRARY_PATH=$(OUT_DIR)/lib $(OUT_DIR)/bin/test
 
 valgrind: build-test
-	valgrind --leak-check=full out/test
+	LD_LIBRARY_PATH=$(OUT_DIR)/lib valgrind --leak-check=full $(OUT_DIR)/bin/test
 
 clean:
-	rm -rf $(OUT_DIR) vgcore*
+	rm -rf $(OUT_DIR) vgcore.*

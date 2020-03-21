@@ -7,7 +7,6 @@ static void print_list(LinkedList *list, char* format)
 {
     printf("    ");
     linkedlist_print(list, format);
-    printf("\n");
 }
 
 void linkedlist_test()

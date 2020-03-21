@@ -16,7 +16,6 @@ static void print_list(CloneList *list, char* format)
 {
     printf("    ");
     clonelist_print(list, format);
-    printf("\n");
 }
 
 void clonelist_test()

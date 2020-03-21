@@ -1,6 +1,3 @@
-#ifndef LINKEDLIST_H
-#define LINKEDLIST_H
-
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -185,13 +182,11 @@ void linkedlist_print(LinkedList *list, char* format)
     printf("<LinkedList [");
     Node *cur = list->first;
     for (int i = 1; i <= list->size; i++) {
-        printf(format, *(int*)cur->item);
+        printf(format, *(void**)cur->item);
         if (i < list->size) {
             printf(", ");
         }
         cur = cur->next;
     }
-    printf("]>");
+    printf("]>\n");
 }
-
-#endif

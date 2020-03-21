@@ -1,6 +1,3 @@
-#ifndef ARRAYLIST_H
-#define ARRAYLIST_H
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -101,12 +98,10 @@ void arraylist_print(ArrayList *list, char* format)
 {
     printf("<ArrayList [");
     for (int i = 0; i < list->size; i++) {
-        printf(format, *(int*)list->data[i]);
+        printf(format, *(void**)list->data[i]);
         if (i < list->size - 1) {
             printf(", ");
         }
     }
-    printf("]>");
+    printf("]>\n");
 }
-
-#endif

@@ -1,6 +1,3 @@
-#ifndef CLONELIST_H
-#define CLONELIST_H
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -91,12 +88,10 @@ void clonelist_print(CloneList *list, char* format)
 {
     printf("<CloneList [");
     for (int i = 0; i < list->size; i++) {
-        printf(format, *(int*)list->data[i]);
+        printf(format, *(void**)list->data[i]);
         if (i < list->size - 1) {
             printf(", ");
         }
     }
-    printf("]>");
+    printf("]>\n");
 }
-
-#endif

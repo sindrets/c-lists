@@ -9,7 +9,6 @@ static void print_list(ArrayList *list, char* format)
 {
     printf("    ");
     arraylist_print(list, format);
-    printf("\n");
 }
 
 void arraylist_test()

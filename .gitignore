@@ -2,7 +2,7 @@
 # misc
 .vscode
 .directory
+vgcore.*
 
 # build files
-out
-
+build
